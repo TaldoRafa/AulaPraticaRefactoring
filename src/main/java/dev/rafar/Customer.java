@@ -15,30 +15,19 @@ public class Customer {
         _rentals.addElement(arg);
     }
 
+    public Enumeration getRentals() {
+        return _rentals.elements();
+    }
+
     public String getName() {
         return _name;
     }
 
     public String statement() {
-        Enumeration rentals = _rentals.elements();
-        StringBuilder result = new StringBuilder("Rental Record for " + getName() + "\n");
-        while (rentals.hasMoreElements()) {
-            Rental each = (Rental) rentals.nextElement();
-
-            //show figures for this rental
-            result.append("\t")
-                    .append(each.getMovie().getTitle())
-                    .append("\t")
-                    .append(each.getCharge())
-                    .append("\n");
-        }
-        //add footer lines
-        result.append("Amount owed is ").append(getTotalCharge()).append("\n");
-        result.append("You earned ").append(getTotalFrequentRenterPoints()).append(" frequent renter points");
-        return result.toString();
+        return new TextStatement().value(this);
     }
 
-    private double getTotalCharge() {
+    public double getTotalCharge() {
         double result = 0;
         Enumeration rentals = _rentals.elements();
         while (rentals.hasMoreElements()) {
@@ -48,7 +37,7 @@ public class Customer {
         return result;
     }
 
-    private int getTotalFrequentRenterPoints(){
+    public int getTotalFrequentRenterPoints() {
         int result = 0;
         Enumeration rentals = _rentals.elements();
         while (rentals.hasMoreElements()) {
@@ -59,20 +48,6 @@ public class Customer {
     }
 
     public String htmlStatement() {
-        Enumeration rentals = _rentals.elements();
-        String result = "<H1>Rentals for <EM>" + getName() + "</EM></H1><P>\n";
-        while (rentals.hasMoreElements()) {
-            Rental each = (Rental) rentals.nextElement();
-            // show figures for each rental
-            result += each.getMovie().getTitle()+ ": " +
-                    String.valueOf(each.getCharge()) + "<BR>\n";
-        }
-
-        // add footer lines
-        result +=  "<P>You owe <EM>" + String.valueOf(getTotalCharge()) + "</EM><P>\n";
-        result += "On this rental you earned <EM>" +
-                String.valueOf(getTotalFrequentRenterPoints()) +
-                "</EM> frequent renter points<P>";
-        return result;
+        return new HtmlStatement().value(this);
     }
 }
